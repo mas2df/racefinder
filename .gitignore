@@ -1,1 +1,62 @@
 .idea/
+[?1049h[?1h=[1;40r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[39;1H".gitignore" [noeol] 2L, 90C[1;1H[1m .gitignore [m[7m                                                                                                                                          [m[2;1H.idea/
+[32m^[[m[?1049h[32m^[[m[?1h[32m^[[m=[32m^[[m[1;40r[32m^[[m[?12;25h[32m^[[m[?12l[32m^[[m[?25h[32m^[[m[27m[32m^[[m[m[32m^[[m[H[32m^[[m[2J[32m^[[m[?25l[32m^[[m[39;1H".gitignore"
+[34m~                                                                                                                                                     [5;1H~                                                                                                                                                     [6;1H~                                                                                                                                                     [7;1H~                                                                                                                                                     [8;1H~                                                                                                                                                     [9;1H~                                                                                                                                                     [10;1H~                                                                                                                                                     [11;1H~                                                                                                                                                     [12;1H~                                                                                                                                                     [13;1H~                                                                                                                                                     [14;1H~                                                                                                                                                     [15;1H~                                                                                                                                                     [16;1H~                                                                                                                                                     [17;1H~                                                                                                                                                     [18;1H~                                                                                                                                                     [19;1H~                                                                                                                                                     [20;1H~                                                                                                                                                     [21;1H~                                                                                                                                                     [22;1H~                                                                                                                                                     [23;1H~                                                                                                                                                     [24;1H~                                                                                                                                                     [25;1H~                                                                                                                                                     [26;1H~                                                                                                                                                     [27;1H~                                                                                                                                                     [28;1H~                                                                                                                                                     [29;1H~                                                                                                                                                     [30;1H~                                                                                                                                                     [31;1H~                                                                                                                                                     [32;1H~                                                                                                                                                     [33;1H~                                                                                                                                                     [34;1H~                                                                                                                                                     [35;1H~                                                                                                                                                     [36;1H~                                                                                                                                                     [37;1H~                                                                                                                                                     [m[38;1H[1m[7m ~/src/racefinder/.gitignore   CWD: /Users/michaelsantamaria/src/racefinder   Line: 1                                                                 [2;1H[?12l[?25h[?25l[m[39;1HType  :quit<Enter>  to exit Vim[2;1H[?12l[?25h[40;1H
+[?1l>[?1049l# Created by https://www.gitignore.io
+
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
