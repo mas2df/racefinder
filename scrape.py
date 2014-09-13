@@ -55,21 +55,23 @@ for state in ["VA"]:
             race_name = td_list[2].div.find_all("a")[1].string
             race_type_list = td_list[2].div.find_all("div")[1].string.split(", ")
 
-            # Follow URL redirect
-            race_url = td_list[2].div.find_all("a")[1]["href"]
-            race_url = base_url + race_url[2:]
+            # Get the URL to the race's website
+            data_source_url = td_list[2].div.find_all("a")[1]["href"]
+            data_source_url = base_url + data_source_url[2:]
             try:
-                response = requests.get(race_url)
+                # Follow URL redirect
+                response = requests.get(data_source_url)
                 for hist in response.history:
-                    race_url = hist.url
+                    race_site_url = hist.url
             except:
-                logger.info("Error retrieving race url: " + race_url)
+                logger.info("Error retrieving race url: " + data_source_url)
 
             # Location
             location = td_list[3].a.string
             lonlat = ["", ""]
 
             if location:
+                # Call google geocoding service to get lat lon
                 geocode_resp = requests.get(google_geocode_url + location)._content
                 geocode_json = json.loads(geocode_resp)
                 if geocode_json["results"] and geocode_json["results"][0]:
@@ -80,7 +82,8 @@ for state in ["VA"]:
                 "name": race_name,
                 "date": formatted_date,
                 "race_type": race_type_list,
-                "url": race_url,
+                "data_source_url": data_source_url,
+                "race_site_url": race_site_url,
                 "location": {
                     "full": location,
                     "lon": lonlat[0],
