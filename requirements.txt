@@ -1,6 +1,6 @@
-BeautifulSoup==3.2.1
 Scrapy==0.24.4
 Twisted==14.0.0
+beautifulsoup4==4.3.2
 certifi==14.05.14
 cffi==0.8.6
 cryptography==0.5.4
