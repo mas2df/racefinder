@@ -31,7 +31,7 @@ with open('output.txt', 'r+a') as output_file:
     race_list = []
 
     # Iterate over states
-    for state in ["VA"]:
+    for state in ["MD", "DE", "DC", "WV"]:
 
         logger.info("State starting: " + state)
 
