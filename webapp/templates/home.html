@@ -3,16 +3,56 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Race Finder</title>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link rel="stylesheet" href="static/css/racefinder.css" />
+
 </head>
 <body>
-This is the race finder app....
-
+<h1>Race finder</h1>
+    <div id="map"></div>
     <ul>
     {% for race in races %}
         <li>{{ race }}
     {% else %}
-        <li><em>Unbelievable.  No entries here so far</em>
+        <li><em>Unbelievable.  No entries here so far.</em>
     {% endfor %}
     </ul>
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!--<script src="static/js/racefinder.js"></script>-->
+    <script>
+
+        function decodeJSON(encodedJSON) {
+            var decodedJSON = $('<div/>').html(encodedJSON).text();
+            //TODO - figure out how to get rid of single quotes
+            decodedJSON = decodedJSON.replace(/'/g, "")
+            return $.parseJSON(decodedJSON);
+        }
+
+        var map = L.map('map').setView([39.0, -77.0], 6);
+
+        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mas2df.jgjm1j40'
+        }).addTo(map);
+
+        var encoded_races = "{{ races }}";
+        var race_list = decodeJSON(encoded_races);
+        for (i in race_list) {
+            var race = L.marker([race_list[i].location.lat, race_list[i].location.lon]).addTo(map)
+            race.bindPopup("<ul><li>" + race_list[i].date + "<li>" + race_list[i].name + "<li>" + race_list[i].race_type + "</ul>");
+        }
+
+
+
+
+
+    </script>
+
 </body>
 </html>

@@ -1,10 +1,12 @@
 import json
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 app = Flask(__name__)
 
 output_contents = []
 with open('../output.txt', 'r') as data_file:
-    output_contents = data_file.readlines()
+    for race in data_file.readlines():
+        # output_contents.append(json.loads(race))
+        output_contents.append(race)
 
 @app.route('/')
 def hello_world():
