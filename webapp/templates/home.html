@@ -5,6 +5,14 @@
     <title>Race Finder</title>
 </head>
 <body>
-This is the race finder app
+This is the race finder app....
+
+    <ul>
+    {% for race in races %}
+        <li>{{ race }}
+    {% else %}
+        <li><em>Unbelievable.  No entries here so far</em>
+    {% endfor %}
+    </ul>
 </body>
 </html>
