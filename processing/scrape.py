@@ -13,7 +13,7 @@ base_url = 'http://runningintheusa.com'
 site_url = base_url + '/Race/List.aspx?Rank=Upcoming&'
 data_row_class_regex = "MenuGridView(Alternating)?Row"
 google_geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address="
-google_api_key = 'AIzaSyAIVJmil6fQtb0SYQsq4fgSvduG_vk6WIo'
+google_api_key = ''
 
 with open('output.txt', 'r+a') as output_file:
 
