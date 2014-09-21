@@ -1,7 +1,7 @@
 racefinder
 ==========
 
-Application for pulling race data and displaying it geospatially.
+Application for pulling race data and displaying it geospatially and temporally.
 
 Scraping
 <ul>
@@ -12,5 +12,13 @@ Scraping
 
 Webapp
 <ul>
-    <li></li>
-</ul
+    <li>styles</li>
+    <li>filters</li>
+    <ul>
+        <li>run, bike, triathlon, etc.</li>
+        <li>distance</li>
+    </ul>
+    <li>timeline filter</li>
+    <li>facets</li>
+    <li>elasticsearch</li>
+</ul>
