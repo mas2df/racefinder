@@ -8,7 +8,15 @@ Scraping
     <li>Look up flyers: http://www.runningintheusa.com/Race/View.aspx?RaceID=90694</li>
     <li>Collect rest of the states</li>
     <li>Figure out out how to get specific locations</li>
-</ul
+    <li>Things to collect:</li>
+    <ul>
+        <li>Run</li>
+        <li>Bike</li>
+        <li>Triathlon</li>
+        <li>Obstacle course racing (OCR)</li>  
+    </ul>
+    
+</ul>
 
 Webapp
 <ul>
