@@ -4,7 +4,7 @@ import logging
 import re
 import datetime
 import json
-from utils import states
+from utils import getDistanceAndType
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -13,12 +13,13 @@ base_url = 'http://runningintheusa.com'
 site_url = base_url + '/Race/List.aspx?Rank=Upcoming&'
 data_row_class_regex = "MenuGridView(Alternating)?Row"
 google_geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address="
+max_pages_to_retrieve = 2
 
 # Load google geocode api key from file
 with open('google_api_key.txt', 'r') as google_api_key_file:
     google_api_key = google_api_key_file.read()
 
-with open('output.txt', 'r+a') as output_file:
+with open('output2.txt', 'r+a') as output_file:
 
     # Load output file contents into a dict
     output_contents = output_file.readlines()
@@ -30,24 +31,24 @@ with open('output.txt', 'r+a') as output_file:
         blah = line_json["date"] + line_json["name"]
         existing_name_date_list.append(line_json["date"] + line_json["name"])
 
-
     race_list = []
 
     # Iterate over states
-    for state in ["MD", "DE", "DC", "WV"]:
+    for state in ["VA"]:
 
         logger.info("State starting: " + state)
 
         # While loop until there are no results
         page_number = 0 # Start at 0 since we increment before request
-        while True:
+        while page_number < max_pages_to_retrieve:
 
             # Increase page_number
             page_number = page_number + 1
-            logger.info("Retrieving page: " + str(page_number))
+            logger.info("Retrieving page: " + str(page_number) + " of " + str(max_pages_to_retrieve))
 
             # Build URL with params
             results_page_url = site_url + "State=" + state + "&Page=" + str(page_number)
+            logger.info("URL: " + results_page_url)
 
             # Get the response and soup it up
             response = requests.get(results_page_url)
@@ -79,7 +80,17 @@ with open('output.txt', 'r+a') as output_file:
                     continue
 
                 # Pull out race type
-                race_type_list = td_list[2].div.find_all("div")[1].string.split(", ")
+                race_type_list = []
+                race_distance_list = []
+                distance_and_type_list = td_list[2].div.find_all("div")[1].string.split(", ")
+                for distance_and_type in distance_and_type_list:
+                    # Separate "type" from distance
+                    (distance, type) = getDistanceAndType(distance_and_type)
+
+                    if distance not in race_distance_list:
+                        race_distance_list.append(distance)
+                    if type not in race_type_list:
+                        race_type_list.append(type)
 
                 # Get the URL to the race's website
                 data_source_url = td_list[2].div.find_all("a")[1]["href"]
@@ -108,6 +119,8 @@ with open('output.txt', 'r+a') as output_file:
                 race_dict = {
                     "name": race_name,
                     "date": formatted_date,
+                    "race_distance_type": distance_and_type_list,
+                    "race_distance": race_distance_list,
                     "race_type": race_type_list,
                     "data_source_url": data_source_url,
                     "race_site_url": race_site_url,

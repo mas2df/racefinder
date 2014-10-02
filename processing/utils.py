@@ -1,3 +1,14 @@
+import re
+
+def getDistanceUnitAndType(value):
+    pattern = re.compile(ur"(\d+(\.\d+)?)?([KMH])?\s?([\x20-\x7E]+)")
+    (distance, decimal, unit, type) = re.findall(pattern, value)[0]
+
+    return (distance, unit, type)
+
+def getDistanceAndType(value):
+    (distance, unit, type) = getDistanceUnitAndType(value)
+    return (distance + " " + unit, type)
 
 states = {
         'AK': 'Alaska',
@@ -56,3 +67,4 @@ states = {
         'WV': 'West Virginia',
         'WY': 'Wyoming'
 }
+
