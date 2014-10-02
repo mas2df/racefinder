@@ -35,5 +35,8 @@ class MyTest(unittest.TestCase):
 
             result = getDistanceAndType(test_data[0])
 
-            self.assertEqual(test_data[1] + " " + test_data[2], result[0])
+            if test_data[1] and test_data[2]:
+                self.assertEqual((test_data[1] + " " + test_data[2]), result[0])
+            else:
+                self.assertEqual("", result[0])
             self.assertEqual(test_data[3], result[1])

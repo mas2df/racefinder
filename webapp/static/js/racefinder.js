@@ -3,6 +3,9 @@
 var racefinder = {
 
     encoded_race_data: "",
+    race_list_json: null,
+    race_distance_type_set: {},
+    race_distance_set: {},
     race_type_set: {},
 
     map: null,
@@ -24,31 +27,56 @@ var racefinder = {
             id: 'mas2df.jgjm1j40'
         }).addTo(this.map);
 
+        this.race_list_json = this.decodeJSON(this.encoded_race_data);
+        this.addRaceMarkerCluster();
+        this.setRaceTypes();
+        this.addRaceFilters();
+    },
+
+    addRaceMarkerCluster: function() {
         var markers = new L.MarkerClusterGroup();
 
         // Iterate over races
-        var race_list = this.decodeJSON(this.encoded_race_data);
-        for (i in race_list) {
+        for (i in this.race_list_json) {
+            var race_json = this.race_list_json[i];
 
             // Create a marker for each race_marker
-            var race_marker = L.marker([race_list[i].location.lat, race_list[i].location.lon]);
-            race_marker.bindPopup("<ul><li>" + race_list[i].date + "<li>" + race_list[i].name + "<li>" + race_list[i].race_type + "<li><a href=\"" + race_list[i].race_site_url + "\" target=\"_blank\">link</a></ul>");
+            var race_marker = L.marker([race_json.location.lat, race_json.location.lon]);
+            race_marker.bindPopup("<ul><li>" + race_json.date + "<li>" + race_json.name + "<li>" + race_json.race_type + "<li><a href=\"" + race_json.race_site_url + "\" target=\"_blank\">link</a></ul>");
             markers.addLayer(race_marker);
+        }
+
+        this.map.addLayer(markers);
+    },
+
+    setRaceTypes: function() {
+        
+        // Iterate over races
+        for (i in this.race_list_json) {
+            var race_json = this.race_list_json[i];
 
             // Add the race_marker types to a set
-            var race_type_list = race_list[i].race_type;
+//            var race_distance_type_list = race_json.race_distance_type;
+//            for (j in race_distance_type_list) {
+//                if (!(race_distance_type_list[j] in this.race_distance_type_set)) {
+//                    this.race_distance_type_set[race_distance_type_list[j]] = true;
+//                }
+//            }
+
+            var race_distance_list = race_json.race_distance;
+            for (j in race_distance_list) {
+                if (race_distance_list[j] && !(race_distance_list[j] in this.race_distance_set)) {
+                    this.race_distance_set[race_distance_list[j]] = true;
+                }
+            }
+
+            var race_type_list = race_json.race_type;
             for (j in race_type_list) {
-                var blah = race_type_list[j];
                 if (!(race_type_list[j] in this.race_type_set)) {
                     this.race_type_set[race_type_list[j]] = true;
                 }
             }
         }
-
-        this.addRaceFilters();
-
-        this.map.addLayer(markers);
-
     },
 
     // Adds race types to the filters
@@ -56,19 +84,37 @@ var racefinder = {
         var me = this;
         var ul = $("<ul>");
 
-        var keys = Object.keys(this.race_type_set);
+        var keys = Object.keys(this.race_distance_type_set);
         $.each(keys, function(i) {
             var input = $("<input>", {type: 'checkbox', value: keys[i], checked: "true"});
-            input.on("click", me.applyFilter);
+            input.on("click", {map: me.map}, me.applyFilter);
+            var li = $("<li/>").append(input).append(keys[i]).appendTo(ul);
+        });
+
+        keys = Object.keys(this.race_type_set);
+        $.each(keys, function(i) {
+            var input = $("<input>", {type: 'checkbox', value: keys[i], checked: "true"});
+            input.on("click", {map: me.map}, me.applyFilter);
+            var li = $("<li/>").append(input).append(keys[i]).appendTo(ul);
+        });
+
+        keys = Object.keys(this.race_distance_set);
+        $.each(keys, function(i) {
+            var input = $("<input>", {type: 'checkbox', value: keys[i], checked: "true"});
+            input.on("click", {map: me.map}, me.applyFilter);
             var li = $("<li/>").append(input).append(keys[i]).appendTo(ul);
         });
 
         $("#race-filter").append(ul);
     },
 
-    applyFilter: function(el){
+    applyFilter: function(event){
         var val = this.value;
         debugger;
+        event.data.map.featureLayer.setFilter(function(f) {
+            debugger;
+            return f.properties['marker-symbol'] === 'fast-food';
+        });
     },
 
     decodeJSON: function (encodedJSON) {

@@ -8,7 +8,10 @@ def getDistanceUnitAndType(value):
 
 def getDistanceAndType(value):
     (distance, unit, type) = getDistanceUnitAndType(value)
-    return (distance + " " + unit, type)
+    combined = ""
+    if (distance and unit):
+        combined = " ".join([distance, unit])
+    return (combined, type)
 
 states = {
         'AK': 'Alaska',
