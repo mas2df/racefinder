@@ -17,7 +17,10 @@ var racefinder = {
     init: function(encoded_race_data) {
         this.encoded_race_data = encoded_race_data;
 
-        this.map = L.map('map').setView([this.initial_lat, this.initial_lon], this.initial_zoom);
+        L.mapbox.accessToken = 'pk.eyJ1IjoibWFzMmRmIiwiYSI6ImxIMjNKNDAifQ.iMw7Zp0QddtBJmco57ufJQ';
+        this.map = L.mapbox.map('map').setView([this.initial_lat, this.initial_lon], this.initial_zoom);;
+
+        //this.map = L.map('map').setView([this.initial_lat, this.initial_lon], this.initial_zoom);
 
         L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: this.max_zoom,
@@ -28,13 +31,19 @@ var racefinder = {
         }).addTo(this.map);
 
         this.race_list_json = this.decodeJSON(this.encoded_race_data);
-        this.addRaceMarkerCluster();
+//        this.addRaceMarkerCluster();
+        this.addRaceMarkers();
+
         this.setRaceTypes();
         this.addRaceFilters();
     },
 
     addRaceMarkerCluster: function() {
-        var markers = new L.MarkerClusterGroup();
+        var markers = new L.MarkerClusterGroup({
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: true,
+            zoomToBoundsOnClick: true
+        });
 
         // Iterate over races
         for (i in this.race_list_json) {
@@ -49,6 +58,22 @@ var racefinder = {
         this.map.addLayer(markers);
     },
 
+    addRaceMarkers: function() {
+        // Iterate over races
+        var layers = [];
+        for (i in this.race_list_json) {
+            var race_json = this.race_list_json[i];
+
+            // Create a marker for each race_marker
+            var race_marker = L.marker([race_json.location.lat, race_json.location.lon]);
+            race_marker.bindPopup("<ul><li>" + race_json.date + "<li>" + race_json.name + "<li>" + race_json.race_type + "<li><a href=\"" + race_json.race_site_url + "\" target=\"_blank\">link</a></ul>");
+            layers.push(race_marker);
+        }
+
+        var lg = L.layerGroup(layers);
+        lg.addTo(this.map);
+    },
+
     setRaceTypes: function() {
         
         // Iterate over races
@@ -56,12 +81,12 @@ var racefinder = {
             var race_json = this.race_list_json[i];
 
             // Add the race_marker types to a set
-//            var race_distance_type_list = race_json.race_distance_type;
-//            for (j in race_distance_type_list) {
-//                if (!(race_distance_type_list[j] in this.race_distance_type_set)) {
-//                    this.race_distance_type_set[race_distance_type_list[j]] = true;
-//                }
-//            }
+            var race_distance_type_list = race_json.race_distance_type;
+            for (j in race_distance_type_list) {
+                if (!(race_distance_type_list[j] in this.race_distance_type_set)) {
+                    this.race_distance_type_set[race_distance_type_list[j]] = true;
+                }
+            }
 
             var race_distance_list = race_json.race_distance;
             for (j in race_distance_list) {
@@ -84,12 +109,12 @@ var racefinder = {
         var me = this;
         var ul = $("<ul>");
 
-        var keys = Object.keys(this.race_distance_type_set);
-        $.each(keys, function(i) {
-            var input = $("<input>", {type: 'checkbox', value: keys[i], checked: "true"});
-            input.on("click", {map: me.map}, me.applyFilter);
-            var li = $("<li/>").append(input).append(keys[i]).appendTo(ul);
-        });
+//        var keys = Object.keys(this.race_distance_type_set);
+//        $.each(keys, function(i) {
+//            var input = $("<input>", {type: 'checkbox', value: keys[i], checked: "true"});
+//            input.on("click", {map: me.map}, me.applyFilter);
+//            var li = $("<li/>").append(input).append(keys[i]).appendTo(ul);
+//        });
 
         keys = Object.keys(this.race_type_set);
         $.each(keys, function(i) {
@@ -110,6 +135,7 @@ var racefinder = {
 
     applyFilter: function(event){
         var val = this.value;
+        var feat = event.data.map.featureLayer;
         debugger;
         event.data.map.featureLayer.setFilter(function(f) {
             debugger;
